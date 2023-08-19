@@ -10,6 +10,5 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 #Prisma
-/dev.db
-/migration.sql
-/migration_lock.toml
+**/dev.db
+**/migration.sql
