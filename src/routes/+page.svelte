@@ -1,1 +1,20 @@
-<h1>Home page</h1>
+<script lang="ts">
+	import { POST } from "./api/newsletter/+server";
+
+    async function subscribe(event: Event) {
+        const form = event.target as HTMLFormElement
+        const data = new FormData(form);
+
+        await fetch("api/newsletter", {
+            method: "POST",
+            body: data
+        })
+    }
+</script>
+
+<h1>Newsletter</h1>
+
+<form on:submit|preventDefault={subscribe}>
+    <input type="email" name="email">
+    <button>Subscribe</button>
+</form>
