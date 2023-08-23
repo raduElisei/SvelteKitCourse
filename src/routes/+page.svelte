@@ -1,20 +1,27 @@
 <script lang="ts">
-	import { POST } from "./api/newsletter/+server";
+	import type { Post } from "@prisma/client";
 
-    async function subscribe(event: Event) {
-        const form = event.target as HTMLFormElement
-        const data = new FormData(form);
-
-        await fetch("api/newsletter", {
-            method: "POST",
-            body: data
-        })
-    }
+	async function getPosts() {
+		const response = await fetch("api/posts");
+		const posts: Post[] = await response.json();
+		return posts;
+	}
 </script>
 
-<h1>Newsletter</h1>
+<h1>Posts</h1>
 
-<form on:submit|preventDefault={subscribe}>
-    <input type="email" name="email">
-    <button>Subscribe</button>
-</form>
+{#await getPosts()}
+	<p>Loading...</p>
+{:then posts}
+	<p>Showing {posts.length} posts</p>
+
+	{#each posts as post}
+		<ul>
+			<li>
+				<a href="/posts/{post.slug}">{post.title}</a>
+			</li>
+		</ul>
+	{/each}
+{:catch error}
+	<p>{error.message}</p>
+{/await}
