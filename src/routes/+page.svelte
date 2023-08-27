@@ -1,27 +1,25 @@
 <script lang="ts">
-	import type { Post } from "@prisma/client";
+	import type { PageData } from "./$types";
 
-	async function getPosts() {
-		const response = await fetch("api/posts");
-		const posts: Post[] = await response.json();
-		return posts;
-	}
+	export let data: PageData;
+
+	// instead of using
+	// const { posts } = data
+	// we use $: () for reactivity
+	// we also use this whole thing i n the first place
+	// so that we dont have to write data.posts.length
+	// just posts.length
+	$: ({ posts } = data);
 </script>
 
 <h1>Posts</h1>
 
-{#await getPosts()}
-	<p>Loading...</p>
-{:then posts}
-	<p>Showing {posts.length} posts</p>
+<p>Showing {posts.length} posts.</p>
 
-	{#each posts as post}
-		<ul>
-			<li>
-				<a href="/posts/{post.slug}">{post.title}</a>
-			</li>
-		</ul>
-	{/each}
-{:catch error}
-	<p>{error.message}</p>
-{/await}
+{#each posts as post}
+	<ul>
+		<li>
+			<a href="/posts/{post.slug}">{post.title}</a>
+		</li>
+	</ul>
+{/each}
